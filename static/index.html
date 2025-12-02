@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forecast Service ML</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      :root { --fg: #0f172a; --muted: #475569; --bg: #f8fafc; --accent: #2563eb; }
+      * { box-sizing: border-box; }
+      body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--fg); background: var(--bg); }
+      header { padding: 16px 20px; background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
+      h1 { margin: 0; font-size: 18px; }
+      .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+      .panel { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+      .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+      .col { display: flex; flex-direction: column; gap: 8px; }
+      label { font-size: 12px; color: var(--muted); }
+      select, input[type=number] { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; min-width: 240px; }
+      button { background: var(--accent); color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+      .charts { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+      .card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
+      .error { color: #b91c1c; margin-top: 10px; }
+      .tag { display: inline-block; background: #eef2ff; color: #3730a3; padding: 2px 8px; border-radius: 999px; font-size: 12px; margin-right: 6px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Прогноз цен: акции и валюты</h1>
+    </header>
+    <div class="container">
+      <div class="panel">
+        <div class="row">
+          <div class="col">
+            <label for="symbols">Выберите один тикер</label>
+            <select id="symbols" size="8"></select>
+            <div class="hint">Примеры: AAPL, MSFT, SPY, USDRUB=X, EURUSD=X</div>
+          </div>
+          <div class="col">
+            <label for="horizon">Горизонт прогноза (дней)</label>
+            <input id="horizon" type="number" value="10" min="3" max="30" />
+            <div class="hint">От 3 до 30 рабочих дней</div>
+          </div>
+          <div class="col">
+            <button id="runBtn">Запустить прогноз</button>
+            <div id="error" class="error"></div>
+          </div>
+        </div>
+        <div id="selected" class="hint" style="margin-top:10px"></div>
+      </div>
+
+      <div id="charts" class="charts"></div>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

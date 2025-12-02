@@ -1,2 +1,36 @@
 # forecast-service-ml
-forecasting service for predicting future exchange rates and stock market values.
+Сервис по прогнозированию будущих цен валют и ценных бумаг компаний
+
+## Быстрый запуск
+
+1) Создание виртуальной среды:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+2) Установка зависимостей:
+
+```powershell
+pip install -r requirements.txt
+```
+
+3) Запуск бека и фронта:
+
+```powershell
+python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+4) Сайт:
+
+- http://localhost:8000/
+
+## API
+
+- `GET /api/symbols` – Возвращает список тикеров.
+- `POST /api/forecast` – Тело запроса: `{ "ticker": "AAPL", "horizon": 10 }`
+	- Returns one object with history and forecast arrays. Возвращает обьект с историей и 
+
+## Записки
+- Модель обучается при каждом запросе на недавних исторических данных используя унивариативные способы чтобы поддерживать время отклика приемлемым и поддерживать дополнительные тикеры.

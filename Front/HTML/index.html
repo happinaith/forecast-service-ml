@@ -1,77 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vanga</title>
-  <link rel="stylesheet" href="../styles/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогнозирование курса валют</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <h1><strong>Проект с характером</strong></h1>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-chart-line"></i>
+                    <span>CurrencyForecast</span>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active">Главная</a>
+                    <a href="#" class="nav-link">О проекте</a>
+                    <a href="#" class="nav-link">API</a>
+                    <a href="#" class="nav-link">Контакты</a>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-user"></i> Войти
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Прогнозирование курса валют</h1>
+                <p class="hero-subtitle">Интеграция с ML-моделью, обученной студентами</p>
+                <div class="hero-badge">
+                    <i class="fab fa-github"></i>
+                    <a href="https://github.com/happinaith/forecast-service-ml" target="_blank">GitHub проекта</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main-content">
+        <div class="container">
+            <section class="intro-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-bolt"></i> Мгновенный доступ к ML-прогнозам</h2>
+                    <p class="section-subtitle">Используйте мощь машинного обучения для анализа валютных курсов</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <h3>ML-Бэкенд</h3>
+                        <p>Интеграция с сервером машинного обучения на Python</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Визуализация</h3>
+                        <p>Интерактивные графики для анализа данных</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Студенческий проект</h3>
+                        <p>Модель разработана в рамках учебного проекта</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="control-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-sliders-h"></i> Управление данными</h2>
+                </div>
+                
+                <div class="control-panel">
+                    <div class="server-status">
+                        <div class="status-indicator" id="status-indicator"></div>
+                        <span class="status-text" id="status-text">Проверка подключения к ML-серверу...</span>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="currency-pair-select" class="form-label">
+                                <i class="fas fa-money-bill-wave"></i> Валютная пара
+                            </label>
+                            <select id="currency-pair-select" class="form-select">
+                                <option value="USD_RUB">USD/RUB (Доллар США / Рубль)</option>
+                                <option value="EUR_RUB">EUR/RUB (Евро / Рубль)</option>
+                                <option value="EUR_USD">EUR/USD (Евро / Доллар США)</option>
+                                <option value="GBP_USD">GBP/USD (Фунт / Доллар США)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="forecast-days" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> Период прогноза
+                            </label>
+                            <select id="forecast-days" class="form-select">
+                                <option value="7">7 дней</option>
+                                <option value="14" selected>14 дней</option>
+                                <option value="30">30 дней</option>
+                                <option value="60">60 дней</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="start-date" class="form-label">
+                                <i class="fas fa-calendar-plus"></i> Начальная дата
+                            </label>
+                            <input type="date" id="start-date" class="form-input">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="end-date" class="form-label">
+                                <i class="fas fa-calendar-minus"></i> Конечная дата
+                            </label>
+                            <input type="date" id="end-date" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button class="btn btn-primary" id="fetch-data-btn">
+                            <i class="fas fa-download"></i> Загрузить данные
+                        </button>
+                        <button class="btn btn-success" id="get-forecast-btn">
+                            <i class="fas fa-brain"></i> Получить прогноз
+                        </button>
+                        <button class="btn btn-outline" id="reset-btn">
+                            <i class="fas fa-redo"></i> Сбросить
+                        </button>
+                    </div>
+                    
+                    <div class="loading" id="loading">
+                        <div class="spinner"></div>
+                        <p>Запрос к ML-серверу...</p>
+                        <p class="loading-details" id="loading-details"></p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="chart-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-area"></i> Визуализация данных</h2>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" id="toggle-both">
+                            <i class="fas fa-layer-group"></i> Все данные
+                        </button>
+                        <button class="chart-btn" id="toggle-historical">
+                            <i class="fas fa-history"></i> История
+                        </button>
+                        <button class="chart-btn" id="toggle-forecast">
+                            <i class="fas fa-crystal-ball"></i> Прогноз
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="currency-chart"></canvas>
+                </div>
+            </section>
+            
+            <section class="info-section">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-code-branch"></i> Архитектура проекта</h3>
+                        <p>Frontend: HTML/CSS/JS с Chart.js</p>
+                        <p>Backend: Python ML-сервис</p>
+                        <p>API: RESTful endpoints</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-rocket"></i> Технологии</h3>
+                        <p>Machine Learning модели</p>
+                        <p>Временные ряды анализа</p>
+                        <p>Реальное время обработки</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><i class="fas fa-users"></i> Для кого</h3>
+                        <p>Студенты и исследователи</p>
+                        <p>Трейдеры и аналитики</p>
+                        <p>Разработчики приложений</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4><i class="fas fa-chart-line"></i> CurrencyForecast</h4>
+                <p>Система прогнозирования валютных курсов с использованием ML</p>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fab fa-github"></i> Проект на GitHub</h4>
+                <a href="https://github.com/happinaith/forecast-service-ml" target="_blank" class="footer-link">
+                    forecast-service-ml
+                </a>
+            </div>
+            <div class="footer-section">
+                <h4><i class="fas fa-graduation-cap"></i> Образовательный проект</h4>
+                <p>ML-модель разработана студентами</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 CurrencyForecast. Все права защищены.</p>
+        </div>
+    </footer>
 
-  <img src="../images/Shashlick.png" alt="Ошибка" width="750">
-  <!-- ALT - подсказка (fr ex -- Ошибка) -->
-  
-  <script src="../js/main.js"></script>
-  <!-- Путь к папке со скриптами JS -->
-  
-  <ul>
-    <!-- Тэг под нумерованный список ol -->
-    <li><em>Вкусная шава</em></li>
-    <li>Вкусная шава</li>
-    <li>Вкусная шава</li>
-  </ul>
-
-  <hr>
-
-  <p><span style="color: rgb(212, 85, 0);"> Сюда мы поместим описание</span></p>
-
-  <hr>
-
-  <pre>
-    Хотите заработать? Хотите. 
-      Поэтому зашли на наш сайт.. Отличный выбор
-        Только не проверяйте его на VirusTotal
-  </pre>
-
-  <table>
-    <caption>Используем передовые технологии</caption>
-    <tr>
-      <td>tensorflow</td>
-      <td>Популярнейшая библиотека от Google</td>
-      <td>Проверена временем</td>
-    </tr>
-    <tr>
-      <td>ML'ку</td>
-      <td>Работает лучше Ванги</td>
-      <td>Точные графики</td>
-    </tr>
-    <tr>
-      <td>Актуальные данные</td>
-      <td>Свежие данные с рынка</td>
-      <td>Полученные предсказания</td>
-    </tr>
-  </table>
-
-
-
-  <p>Узнайте прогноз прямо сейчас</p>
-  <form action="">
-      <input type="text">
-      <button>Кнопка для графика под JS и TypeScript</button>
-      <select name="" id="">
-        <option value="">2025год</option>
-        <option value="">2026год</option>
-        <option value="">2027+год</option>
-      </select>
-  </form>
-
-  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque, sunt commodi! Excepturi hic sed et eaque blanditiis unde voluptates eveniet, consequuntur soluta architecto qui magnam ipsa dicta doloribus sit esse.</p>
-
-<blockquote>Юлиан сказал Матвей -- где запятая?</blockquote>
-
-  <div><a href="../HTML/second.html">Вторая страница</a></div>
-  <!-- a - гипперссылка Является строчной (не без обёртки), либо br -->
-  <!-- br нужен для стихов, как правило  -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

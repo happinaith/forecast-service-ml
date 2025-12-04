@@ -43,6 +43,22 @@ static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "stat
 if os.path.isdir(static_dir):
 	app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
+print("=" * 50)
+print(f"Current file: {__file__}")
+print(f"Directory of main.py: {os.path.dirname(__file__)}")
+print(f"Static directory path: {static_dir}")
+print(f"Static directory exists: {os.path.isdir(static_dir)}")
+
+if os.path.isdir(static_dir):
+    print("Files in static directory:")
+    for file in os.listdir(static_dir):
+        print(f"  - {file}")
+    
+    index_path = os.path.join(static_dir, "index.html")
+    print(f"Index.html path: {index_path}")
+    print(f"Index.html exists: {os.path.exists(index_path)}")
+print("=" * 50)
+
 
 @app.get("/")
 def root():

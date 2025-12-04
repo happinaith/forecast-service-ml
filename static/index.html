@@ -1,62 +1,143 @@
 <!doctype html>
 <html lang="ru">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Forecast Service ML</title>
+    <title>Forecast Service ML — Прогноз финансовых активов</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-      :root { --fg: #0f172a; --muted: #475569; --bg: #f8fafc; --accent: #2563eb; }
-      * { box-sizing: border-box; }
-      body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--fg); background: var(--bg); }
-      header { padding: 16px 20px; background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
-      h1 { margin: 0; font-size: 18px; }
-      .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
-      .panel { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
-      .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
-      .col { display: flex; flex-direction: column; gap: 8px; }
-      label { font-size: 12px; color: var(--muted); }
-      select, input[type=number] { padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; min-width: 240px; }
-      button { background: var(--accent); color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-      button:disabled { opacity: .6; cursor: not-allowed; }
-      .hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
-      .charts { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 16px; }
-      .card { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; }
-      .error { color: #b91c1c; margin-top: 10px; }
-      .tag { display: inline-block; background: #eef2ff; color: #3730a3; padding: 2px 8px; border-radius: 999px; font-size: 12px; margin-right: 6px; }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Прогноз цен: акции и валюты</h1>
-    </header>
-    <div class="container">
-      <div class="panel">
-        <div class="row">
-          <div class="col">
-            <label for="symbols">Выберите один тикер</label>
-            <select id="symbols" size="8"></select>
-            <div class="hint">Примеры: AAPL, MSFT, SPY, USDRUB=X, EURUSD=X</div>
-          </div>
-          <div class="col">
-            <label for="horizon">Горизонт прогноза (дней)</label>
-            <input id="horizon" type="number" value="10" min="3" max="30" />
-            <div class="hint">От 3 до 30 рабочих дней</div>
-          </div>
-          <div class="col">
-            <button id="runBtn">Запустить прогноз</button>
-            <div id="error" class="error"></div>
-          </div>
-        </div>
-        <div id="selected" class="hint" style="margin-top:10px"></div>
-      </div>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">📈</div>
+                    <div class="logo-text">
+                        <h1>Forecast Service ML</h1>
+                        <p>Прогноз цен на акции и валюты с использованием машинного обучения</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span>Сервер активен</span>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-      <div id="charts" class="charts"></div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <span>📊</span> Выбор актива
+                    </h3>
+                    <div class="ticker-selector">
+                        <div class="ticker-search">
+                            <div class="search-icon">🔍</div>
+                            <input type="text" id="tickerSearch" placeholder="Поиск тикера..." />
+                        </div>
+                        <div class="ticker-list" id="tickerList">
+                            <!-- Тут будут тикеры -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3 class="section-title">
+                        <span>⚙️</span> Настройки прогноза
+                    </h3>
+                    <div class="control-group">
+                        <label for="horizonRange">Горизонт прогноза: <span id="horizonValue">10</span> дней</label>
+                        <input type="range" id="horizonRange" class="range-input" min="3" max="30" value="10" step="1" />
+                        <div class="range-value">
+                            <span>3 дня</span>
+                            <span>30 дней</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="horizonInput">Или укажите точное значение:</label>
+                        <input type="number" id="horizonInput" min="3" max="30" value="10" />
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <button id="forecastButton" class="forecast-button">
+                        <span>🚀 Запустить прогноз</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Chart Area -->
+            <div class="chart-area">
+                <!-- Chart Container -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title">
+                            <h2 id="chartTitle">Выберите актив для прогноза</h2>
+                            <div class="chart-subtitle" id="chartSubtitle">
+                                Нажмите "Запустить прогноз" для отображения графика
+                            </div>
+                        </div>
+                        <div class="chart-actions">
+                            <button class="chart-action-btn" id="zoomInBtn" title="Приблизить">
+                                <span>🔍</span> Приблизить
+                            </button>
+                            <button class="chart-action-btn" id="zoomOutBtn" title="Отдалить">
+                                <span>🔍</span> Отдалить
+                            </button>
+                            <button class="chart-action-btn" id="downloadBtn" title="Скачать данные">
+                                <span>📥</span> Скачать
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="priceChart"></canvas>
+                        <div class="no-data-message" id="noDataMessage">
+                            <div class="no-data-icon">📊</div>
+                            <h3>Нет данных для отображения</h3>
+                            <p>Выберите актив и настройте параметры прогноза</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-container" id="statsContainer">
+                    <!-- Статистика будет вставляться динамически -->
+                </div>
+
+                <!-- Forecast Details -->
+                <div class="forecast-details" id="forecastDetails" style="display: none;">
+                    <div class="details-header">
+                        <h3 class="section-title">
+                            <span>📋</span> Детали прогноза
+                        </h3>
+                    </div>
+                    <div class="details-grid" id="detailsGrid">
+                        <!-- Детали будут вставляться динамически -->
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="errorContainer"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Идет загрузка прогноза...</div>
     </div>
 
     <script src="/static/app.js"></script>
-  </body>
+</body>
 </html>

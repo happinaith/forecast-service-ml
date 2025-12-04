@@ -3,26 +3,20 @@
 
 ## Быстрый запуск
 
-1) Создание виртуальной среды:
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+1) Создание контейнера с проектом:
+
+```
+docker build -t forecast-service-ml .
 ```
 
-2) Установка зависимостей:
+2) Запуск контейнера:
 
-```powershell
-pip install -r requirements.txt
+```
+docker run --rm -p 8000:8000 forecast-service-ml
 ```
 
-3) Запуск бека и фронта:
-
-```powershell
-python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-4) Сайт:
+3) Сайт:
 
 - http://localhost:8000/
 
@@ -34,3 +28,6 @@ python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
 
 ## Записки
 - Модель обучается при каждом запросе на недавних исторических данных используя унивариативные способы чтобы поддерживать время отклика приемлемым и поддерживать дополнительные тикеры.
+
+## Отчет по проекту
+- https://docs.google.com/document/d/1UtJ8YO9k77pi4DFcJT7Q6jFS_iasUe8YTw5YZqR1-aY/edit?usp=sharing
